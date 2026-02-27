@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@source "../../../packages/angi/src/**/*.{ts,tsx}";
+
 
 :root {
   /* Premium Color Palette - Indigo/Violet based */

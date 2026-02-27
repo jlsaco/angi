@@ -1,4 +1,4 @@
-import { AngiAgent } from "../../../angi/server";
+import { AngiAgent } from "angi/server";
 import { NextRequest } from "next/server";
 
 const angi = new AngiAgent({ apiKey: process.env.ANTHROPIC_API_KEY || "" });

@@ -1,7 +1,8 @@
 "use client";
 
 import ContactForm from "@/components/ContactForm";
-import { AngiChatBubble, Angi } from "@/angi";
+import { AngiChatBubble, Angi } from "angi/client";
+
 
 export default function Home() {
   return (
@@ -32,11 +33,7 @@ export default function Home() {
           <Angi.Form> is a thin boundary — it only provides id + permissions in context.
           ContactForm registers itself via useAngiComponent() internally.
         */}
-        <Angi id="contact-form" permissions={["read", "write"]}>
-          <ContactForm />
-        </Angi>
-
-        <Angi id="contact-form1" permissions={["read", "write"]}>
+        <Angi id="contact-form -1" permissions={["read", "write"]}>
           <ContactForm />
         </Angi>
         <footer className="mt-20 text-gray-600 text-sm">
@@ -48,5 +45,6 @@ export default function Home() {
       {/* Floating AI Chat Bubble */}
       <AngiChatBubble />
     </main>
+
   );
 }

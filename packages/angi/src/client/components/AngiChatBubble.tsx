@@ -16,6 +16,7 @@ import { useAngi } from "../hooks/useAngi";
  */
 export function AngiChatBubble() {
   const { sendPrompt, isLoading, streamText } = useAngi();
+
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<
@@ -151,7 +152,8 @@ export function AngiChatBubble() {
       <button
         onClick={() => setIsOpen((v) => !v)}
         aria-label="Open Angi AI assistant"
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary shadow-[0_0_20px_rgba(139,92,246,0.5)] hover:shadow-[0_0_30px_rgba(139,92,246,0.7)] flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
+        style={{ backgroundColor: "#8b5cf6" }}
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-[0_0_20px_rgba(139,92,246,0.5)] hover:shadow-[0_0_30px_rgba(139,92,246,0.7)] flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
       >
         {isOpen ? (
           <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -170,8 +172,8 @@ export function AngiChatBubble() {
           {/* Header */}
           <div className="px-4 py-3 border-b border-white/10 flex items-center gap-3">
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-sm font-semibold text-white">Angi AI</span>
-            <span className="ml-auto text-xs text-gray-500">Powered by Claude</span>
+            <span className="text-sm font-semibold text-white">Angi Agent</span>
+            <span className="ml-auto text-xs text-gray-500">Powered by Angi</span>
           </div>
 
           {/* Message History */}
