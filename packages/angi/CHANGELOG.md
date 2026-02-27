@@ -1,5 +1,11 @@
 # @angi-ai/angi
 
+## 0.1.1
+
+### Patch Changes
+
+- 106f228: Migrate build system from TSC to tsup, update package metadata
+
 ## 0.1.0
 
 ### Minor Changes
