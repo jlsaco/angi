@@ -33,10 +33,13 @@ export default function Home() {
           <Angi.Form> is a thin boundary — it only provides id + permissions in context.
           ContactForm registers itself via useAngiComponent() internally.
         */}
-        <Angi.Form id="contact-form" permissions={["read", "write"]}>
+        <Angi id="contact-form" permissions={["read", "write"]}>
           <ContactForm />
-        </Angi.Form>
+        </Angi>
 
+        <Angi id="contact-form1" permissions={["read", "write"]}>
+          <ContactForm />
+        </Angi>
         <footer className="mt-20 text-gray-600 text-sm">
           Built with Next.js · Powered by{" "}
           <span className="text-primary font-medium">Angi</span>

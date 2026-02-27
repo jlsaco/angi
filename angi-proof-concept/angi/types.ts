@@ -20,6 +20,7 @@ export interface AngiAction {
  */
 export interface AngiComponentDefinition {
   id: string;
+  instanceId?: string;
   description: string;
   permissions: AngiPermission[];
   getState: () => unknown;
@@ -57,8 +58,3 @@ export interface AngiContextValue {
   streamText: string;
 }
 
-/** Shape passed down from an Angi.* wrapper to its children via context */
-export interface AngiComponentContextValue {
-  id: string;
-  permissions: AngiPermission[];
-}
