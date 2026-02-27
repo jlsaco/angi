@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import type Anthropic from "@anthropic-ai/sdk";
 import type { AngiServerAdapter } from "../types";
 import type { ComponentPayload, AngiStreamChunk } from "../../shared/types";
 

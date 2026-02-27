@@ -1,6 +1,6 @@
 {
-  "name": "angi",
-  "version": "0.1.0",
+  "name": "@angi-tools/angi",
+  "version": "0.0.0",
   "description": "AI-addressable React components",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -23,8 +23,25 @@
     "dist",
     "src"
   ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "TSESTREE_SINGLE_RUN=true eslint src/ --ext .ts,.tsx",
+    "test": "echo \"No tests configured yet\" && exit 0",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
   "dependencies": {
     "react-markdown": "^10.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0"
   },
   "peerDependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
