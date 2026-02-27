@@ -2,21 +2,43 @@
   "name": "@angi-ai/angi",
   "version": "0.1.0",
   "description": "AI-addressable React components",
+  "author": "Jose Salamanca",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jlsaco/angi.git",
+    "directory": "packages/angi"
+  },
+  "homepage": "https://github.com/jlsaco/angi/tree/main/packages/angi#readme",
+  "bugs": {
+    "url": "https://github.com/jlsaco/angi/issues"
+  },
+  "keywords": [
+    "react",
+    "ai",
+    "agent",
+    "llm",
+    "anthropic",
+    "components"
+  ],
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     "./client": {
-      "types": "./src/client/index.ts",
-      "import": "./src/client/index.ts"
+      "types": "./dist/client/index.d.ts",
+      "import": "./dist/client/index.mjs",
+      "require": "./dist/client/index.js"
     },
     "./server": {
-      "types": "./src/server/index.ts",
-      "import": "./src/server/index.ts"
+      "types": "./dist/server/index.d.ts",
+      "import": "./dist/server/index.mjs",
+      "require": "./dist/server/index.js"
     },
     ".": {
-      "types": "./src/index.ts",
-      "import": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     }
   },
   "files": [
@@ -28,7 +50,7 @@
     "provenance": true
   },
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsup",
     "typecheck": "tsc --noEmit",
     "lint": "TSESTREE_SINGLE_RUN=true eslint src/ --ext .ts,.tsx",
     "test": "echo \"No tests configured yet\" && exit 0",
@@ -37,17 +59,36 @@
     "postpack": "rm -f README.md",
     "prepublishOnly": "npm run clean && npm run build"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "react-markdown": "^10.1.0"
   },
   "devDependencies": {
-    "eslint": "^8.57.0",
+    "@types/node": "^25.3.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
-    "@typescript-eslint/eslint-plugin": "^7.0.0"
+    "eslint": "^8.57.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@anthropic-ai/sdk": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
   }
 }
