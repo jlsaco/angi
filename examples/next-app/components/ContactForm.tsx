@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useAngiComponent } from "angi/client";
-import type { AngiAction } from "angi/client";
+import { useAngiComponent } from "@angi-ai/angi/client";
+import type { AngiAction } from "@angi-ai/angi/client";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AngiNextProvider } from "angi/client";
+import { AngiNextProvider } from "@angi-ai/angi/client";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

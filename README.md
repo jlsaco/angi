@@ -48,7 +48,7 @@ This is the bridge between your UI and the LLM. A single file is enough.
 
 ```ts
 // app/api/angi/route.ts  (Next.js App Router)
-import { AngiAgent } from "angi/server";
+import { AngiAgent } from "@angi-ai/angi/server";
 import { NextRequest } from "next/server";
 
 const angi = new AngiAgent({ apiKey: process.env.ANTHROPIC_API_KEY! });
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
 
 ```tsx
 // app/layout.tsx
-import { AngiNextProvider } from "angi/client";
+import { AngiNextProvider } from "@angi-ai/angi/client";
 
 export default function RootLayout({
   children,
@@ -93,7 +93,7 @@ export default function RootLayout({
 ### 3 · Drop in the chat widget
 
 ```tsx
-import { AngiChatBubble } from "angi/client";
+import { AngiChatBubble } from "@angi-ai/angi/client";
 
 // Renders a floating ✦ button — the user's gateway to the AI
 <AngiChatBubble />;
@@ -104,8 +104,8 @@ import { AngiChatBubble } from "angi/client";
 ```tsx
 "use client";
 import { useState } from "react";
-import { Angi, useAngiComponent } from "angi/client";
-import type { AngiAction } from "angi/client";
+import { Angi, useAngiComponent } from "@angi-ai/angi/client";
+import type { AngiAction } from "@angi-ai/angi/client";
 
 function ContactForm() {
   const [name, setName] = useState("");
@@ -189,7 +189,7 @@ Angi declares the following **peer dependencies** — your project must have the
 Install them alongside Angi:
 
 ```bash
-npm install angi @anthropic-ai/sdk react react-dom
+npm install @angi-ai/angi @anthropic-ai/sdk react react-dom
 ```
 
 > If you're adding Angi to an existing React 19 / Next.js 15 project, you likely only need to install `@anthropic-ai/sdk`.
@@ -218,8 +218,8 @@ import {
   AngiChatBubble,
   useAngi,
   useAngiComponent,
-} from "angi/client";
-import { AngiAgent } from "angi/server";
+} from "@angi-ai/angi/client";
+import { AngiAgent } from "@angi-ai/angi/server";
 ```
 
 ---

@@ -1,5 +1,5 @@
 ---
-"angi": major
+"@angi-ai/angi": minor
 ---
 
 Initial release of the `angi` package providing the following core functionalities:
