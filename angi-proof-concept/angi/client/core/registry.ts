@@ -1,4 +1,4 @@
-import type { AngiComponentDefinition } from "./types";
+import type { AngiComponentDefinition } from "../types";
 
 // Module-level singleton — survives re-renders, shared across the whole app.
 const registry = new Map<string, AngiComponentDefinition>();

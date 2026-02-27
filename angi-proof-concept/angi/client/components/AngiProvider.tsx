@@ -7,8 +7,8 @@ import React, {
   useRef,
   useState,
 } from "react";
-import type { AngiAdapter, AngiContextValue, AngiStreamChunk } from "./types";
-import { getSnapshot } from "./registry";
+import type { AngiAdapter, AngiContextValue, AngiStreamChunk } from "../types";
+import { getSnapshot } from "../core/registry";
 
 const AngiContext = createContext<AngiContextValue | null>(null);
 

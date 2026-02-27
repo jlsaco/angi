@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useId } from "react";
-import { register, unregister } from "./registry";
-import { useAngiComponentContext } from "./Angi";
-import { stableHash } from "./utils/hash";
-import type { AngiAction } from "./types";
+import { register, unregister } from "../core/registry";
+import { useAngiComponentContext } from "../components/Angi";
+import { stableHash } from "../core/utils/hash";
+import type { AngiAction } from "../types";
 
 interface UseAngiComponentOptions {
   description: string;

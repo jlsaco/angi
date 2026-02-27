@@ -1,8 +1,7 @@
 "use client";
 
 import ContactForm from "@/components/ContactForm";
-import { AngiChatBubble } from "@/angi";
-import { Angi } from "@/angi/Angi";
+import { AngiChatBubble, Angi } from "@/angi";
 
 export default function Home() {
   return (

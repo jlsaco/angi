@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useAngi } from "./useAngi";
+import { useAngi } from "../hooks/useAngi";
 
 /**
  * AngiChatBubble — floating AI chat widget.

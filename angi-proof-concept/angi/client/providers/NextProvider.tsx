@@ -1,6 +1,7 @@
 "use client";
 
-import { AngiProvider, createAnthropicAdapter } from "./index";
+import { AngiProvider } from "../components/AngiProvider";
+import { createAnthropicAdapter } from "../adapters/anthropic";
 import { useMemo } from "react";
 
 /**

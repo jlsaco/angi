@@ -4,6 +4,8 @@
 
 export type AngiPermission = "read" | "write";
 
+import type { AngiStreamChunk } from "../shared/types";
+
 /**
  * A single action that the LLM can call on a registered component.
  */
@@ -27,19 +29,7 @@ export interface AngiComponentDefinition {
   actions: Record<string, AngiAction>;
 }
 
-/**
- * A single chunk yielded by an adapter during streaming.
- */
-export type AngiStreamChunk =
-  | { type: "text"; text: string }
-  | {
-      type: "action";
-      action: {
-        componentId: string;
-        actionName: string;
-        params: Record<string, unknown>;
-      };
-    };
+export type { AngiStreamChunk };
 
 /**
  * The adapter interface — any LLM integration must implement this.

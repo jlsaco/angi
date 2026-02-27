@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext } from "react";
-import type { AngiPermission } from "./types";
+import type { AngiPermission } from "../types";
 
 export interface AngiComponentContextValue {
   id?: string; // optional — if absent, useAngiComponent derives one from description
