@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 import { useAngi } from "../hooks/useAngi";
 
 /**
@@ -66,6 +67,86 @@ export function AngiChatBubble() {
 
   return (
     <>
+      {/* Markdown styles for assistant messages */}
+      <style>{`
+        .angi-md h1, .angi-md h2, .angi-md h3 {
+          font-weight: 700;
+          color: #e2e8f0;
+          margin-top: 0.6em;
+          margin-bottom: 0.3em;
+          line-height: 1.3;
+        }
+        .angi-md h1 { font-size: 0.85rem; }
+        .angi-md h2 { font-size: 0.8rem; }
+        .angi-md h3 { font-size: 0.75rem; }
+        .angi-md p {
+          margin: 0.35em 0;
+        }
+        .angi-md strong {
+          color: #c4b5fd;
+          font-weight: 600;
+        }
+        .angi-md em {
+          color: #a5b4fc;
+          font-style: italic;
+        }
+        .angi-md ul, .angi-md ol {
+          margin: 0.3em 0;
+          padding-left: 1.2em;
+        }
+        .angi-md ul { list-style-type: disc; }
+        .angi-md ol { list-style-type: decimal; }
+        .angi-md li {
+          margin: 0.15em 0;
+        }
+        .angi-md li::marker {
+          color: #8b5cf6;
+        }
+        .angi-md code {
+          background: rgba(139, 92, 246, 0.15);
+          color: #c4b5fd;
+          padding: 0.1em 0.35em;
+          border-radius: 4px;
+          font-size: 0.9em;
+          font-family: 'Fira Code', 'Cascadia Code', monospace;
+        }
+        .angi-md pre {
+          background: rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 8px;
+          padding: 0.5em 0.7em;
+          margin: 0.4em 0;
+          overflow-x: auto;
+        }
+        .angi-md pre code {
+          background: transparent;
+          padding: 0;
+        }
+        .angi-md hr {
+          border: none;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          margin: 0.6em 0;
+        }
+        .angi-md a {
+          color: #a78bfa;
+          text-decoration: underline;
+          text-underline-offset: 2px;
+        }
+        .angi-md blockquote {
+          border-left: 2px solid #8b5cf6;
+          padding-left: 0.6em;
+          margin: 0.4em 0;
+          color: #94a3b8;
+          font-style: italic;
+        }
+        .angi-md > *:first-child {
+          margin-top: 0;
+        }
+        .angi-md > *:last-child {
+          margin-bottom: 0;
+        }
+      `}</style>
+
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen((v) => !v)}
@@ -107,7 +188,13 @@ export function AngiChatBubble() {
                     ? "bg-primary/80 text-white"
                     : "bg-white/8 text-gray-200 border border-white/10"
                 }`}>
-                  {msg.text}
+                  {msg.role === "assistant" ? (
+                    <div className="angi-md">
+                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    msg.text
+                  )}
                   {msg.role === "assistant" && isLoading && i === history.length - 1 && (
                     <span className="ml-1 inline-block w-1.5 h-3 bg-gray-400 animate-pulse rounded-sm" />
                   )}
