@@ -1,0 +1,53 @@
+{
+  "name": "@angi-ai/angi",
+  "version": "0.0.0",
+  "description": "AI-addressable React components",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./client": {
+      "types": "./src/client/index.ts",
+      "import": "./src/client/index.ts"
+    },
+    "./server": {
+      "types": "./src/server/index.ts",
+      "import": "./src/server/index.ts"
+    },
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "TSESTREE_SINGLE_RUN=true eslint src/ --ext .ts,.tsx",
+    "test": "echo \"No tests configured yet\" && exit 0",
+    "clean": "rm -rf dist",
+    "prepack": "cp ../../README.md .",
+    "postpack": "rm -f README.md",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "dependencies": {
+    "react-markdown": "^10.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0"
+  },
+  "peerDependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}

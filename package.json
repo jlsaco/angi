@@ -1,0 +1,31 @@
+{
+  "name": "angi-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Monorepo for Angi — AI-addressable React components",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=packages/angi",
+    "typecheck": "npm run typecheck --workspace=packages/angi",
+    "lint": "npm run lint --workspace=packages/angi",
+    "test": "npm run test --workspace=packages/angi",
+    "clean": "npm run clean --workspace=packages/angi",
+    "dev": "npm run dev --workspaces --if-present"
+  },
+  "keywords": [
+    "ai",
+    "react",
+    "agent",
+    "components",
+    "anthropic",
+    "claude"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@changesets/cli": "^2.29.8"
+  }
+}
