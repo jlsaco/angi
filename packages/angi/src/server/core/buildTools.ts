@@ -1,8 +1,7 @@
-import type { Anthropic } from "@anthropic-ai/sdk";
-import type { ComponentPayload } from "../../shared/types";
+import type { ComponentPayload, AngiToolDefinition } from "../../shared/types";
 
-export function buildTools(components: ComponentPayload[]): Anthropic.Tool[] {
-  const tools: Anthropic.Tool[] = [];
+export function buildTools(components: ComponentPayload[]): AngiToolDefinition[] {
+  const tools: AngiToolDefinition[] = [];
 
   for (const comp of components) {
     if (!comp.permissions.includes("write")) continue;

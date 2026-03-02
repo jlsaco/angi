@@ -1,18 +1,34 @@
-import type { Anthropic } from "@anthropic-ai/sdk";
-import type { ComponentPayload, AngiStreamChunk } from "../shared/types";
+import type {
+  ComponentPayload,
+  AngiStreamChunk,
+  AngiToolDefinition,
+} from "../shared/types";
 
 export interface AngiServerAdapter {
   run(
     prompt: string,
     components: ComponentPayload[],
-    tools: Anthropic.Tool[],
+    tools: AngiToolDefinition[],
     systemPrompt: string
   ): AsyncIterable<AngiStreamChunk>;
 }
 
+export type AngiProvider = "anthropic" | "openai" | "gemini";
+
 export interface AngiAgentConfig {
+  /** API key for the chosen provider. */
   apiKey: string;
+
+  /**
+   * Which LLM provider to use.
+   * Defaults to "anthropic" for backward compatibility.
+   */
+  provider?: AngiProvider;
+
+  /** Override the default model for the chosen provider. */
   model?: string;
+
+  /** Supply your own adapter instead of using a built-in provider. */
   adapter?: AngiServerAdapter;
 }
 

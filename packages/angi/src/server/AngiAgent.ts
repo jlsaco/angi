@@ -1,19 +1,72 @@
-import Anthropic from "@anthropic-ai/sdk";
-import type { AngiAgentConfig, AngiResponse, AngiServerAdapter } from "./types";
+import type {
+  AngiAgentConfig,
+  AngiResponse,
+  AngiServerAdapter,
+  AngiProvider,
+} from "./types";
 import type { AngiRequestBody } from "../shared/types";
 import { buildTools } from "./core/buildTools";
 import { buildSystemPrompt } from "./core/buildSystemPrompt";
-import { createAnthropicServerAdapter } from "./adapters/anthropic";
+
+/**
+ * Lazily create the correct adapter based on the provider string.
+ * Each provider SDK is dynamically imported so users only need to install
+ * the SDK for the provider they actually use.
+ */
+async function createAdapterForProvider(
+  provider: AngiProvider,
+  apiKey: string,
+  model?: string
+): Promise<AngiServerAdapter> {
+  switch (provider) {
+    case "anthropic": {
+      const Anthropic = (await import("@anthropic-ai/sdk")).default;
+      const { createAnthropicServerAdapter } = await import(
+        "./adapters/anthropic"
+      );
+      const client = new Anthropic({ apiKey });
+      return createAnthropicServerAdapter(client, model);
+    }
+
+    case "openai": {
+      const OpenAI = (await import("openai")).default;
+      const { createOpenAIServerAdapter } = await import(
+        "./adapters/openai"
+      );
+      const client = new OpenAI({ apiKey });
+      return createOpenAIServerAdapter(client, model);
+    }
+
+    case "gemini": {
+      const { GoogleGenAI } = await import("@google/genai");
+      const { createGeminiServerAdapter } = await import(
+        "./adapters/gemini"
+      );
+      const client = new GoogleGenAI({ apiKey });
+      return createGeminiServerAdapter(client, model);
+    }
+
+    default:
+      throw new Error(
+        `[AngiAgent] Unknown provider "${provider}". ` +
+          `Supported providers: "anthropic", "openai", "gemini".`
+      );
+  }
+}
 
 export class AngiAgent {
-  private adapter: AngiServerAdapter;
+  private adapterPromise: Promise<AngiServerAdapter>;
 
   constructor(config: AngiAgentConfig) {
     if (config.adapter) {
-      this.adapter = config.adapter;
+      this.adapterPromise = Promise.resolve(config.adapter);
     } else {
-      const client = new Anthropic({ apiKey: config.apiKey });
-      this.adapter = createAnthropicServerAdapter(client);
+      const provider = config.provider ?? "anthropic";
+      this.adapterPromise = createAdapterForProvider(
+        provider,
+        config.apiKey,
+        config.model
+      );
     }
   }
 
@@ -25,8 +78,9 @@ export class AngiAgent {
     const { prompt, components } = body;
     const tools = buildTools(components);
     const systemPrompt = buildSystemPrompt(components);
+    const adapter = await this.adapterPromise;
 
-    const stream = this.adapter.run(prompt, components, tools, systemPrompt);
+    const stream = adapter.run(prompt, components, tools, systemPrompt);
 
     let text = "";
     const actions: AngiResponse["actions"] = [];
@@ -50,25 +104,35 @@ export class AngiAgent {
     const { prompt, components } = body;
     const tools = buildTools(components);
     const systemPrompt = buildSystemPrompt(components);
-    
-    // We bind 'this' carefully in case adapter.run relies on it
-    const streamIter = this.adapter.run(prompt, components, tools, systemPrompt);
+    const adapterPromise = this.adapterPromise;
     const encoder = new TextEncoder();
 
     return new ReadableStream({
       async start(controller) {
         const sendSSE = (data: unknown) => {
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
+          controller.enqueue(
+            encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
+          );
         };
 
         try {
+          const adapter = await adapterPromise;
+          const streamIter = adapter.run(
+            prompt,
+            components,
+            tools,
+            systemPrompt
+          );
           for await (const chunk of streamIter) {
             sendSSE(chunk);
           }
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
         } catch (err) {
           console.error("[AngiAgent] Stream processing error:", err);
-          sendSSE({ type: "text", text: "⚠️ An error occurred on the server." });
+          sendSSE({
+            type: "text",
+            text: "⚠️ An error occurred on the server.",
+          });
           controller.enqueue(encoder.encode("data: [DONE]\n\n"));
         } finally {
           controller.close();
@@ -76,7 +140,7 @@ export class AngiAgent {
       },
       cancel() {
         // Stream reading was cancelled by consumer
-      }
+      },
     });
   }
 }
