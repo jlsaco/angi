@@ -13,9 +13,6 @@ import Link from "next/link";
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [provider, setProvider] = useState<Provider>("anthropic");
 
-  // createAnthropicAdapter is provider-agnostic on the client side —
-  // it just calls the endpoint and parses SSE. The actual provider
-  // logic is server-side. We pass provider as a query param.
   const adapter = useMemo(
     () => createAnthropicAdapter(`/api/angi?provider=${provider}`),
     [provider]
@@ -24,25 +21,25 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <ProviderContext.Provider value={{ provider, setProvider }}>
       <AngiProvider adapter={adapter}>
-        <nav className="border-b border-gray-200 bg-white px-6 py-3 flex items-center justify-between">
+        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/50 backdrop-blur-md px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <span className="font-semibold text-gray-900">Angi Test</span>
+            <span className="font-semibold text-white">Angi</span>
             <Link
-              href="/blog"
-              className="text-sm text-gray-600 hover:text-gray-900"
+              href="/"
+              className="text-sm text-gray-400 hover:text-white transition-colors"
             >
-              Blog
+              Contact Form
             </Link>
             <Link
-              href="/form"
-              className="text-sm text-gray-600 hover:text-gray-900"
+              href="/blog"
+              className="text-sm text-gray-400 hover:text-white transition-colors"
             >
-              Form
+              Blog
             </Link>
           </div>
           <ProviderSwitcher />
         </nav>
-        <main className="min-h-screen bg-gray-50">{children}</main>
+        <div className="pt-14">{children}</div>
         <AngiChatBubble />
       </AngiProvider>
     </ProviderContext.Provider>
