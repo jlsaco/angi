@@ -1,4 +1,3 @@
-import type Anthropic from "@anthropic-ai/sdk";
 import type { AngiServerAdapter } from "../types";
 import type {
   ComponentPayload,
@@ -11,7 +10,7 @@ import { parseToolName, parseToolParams } from "../core/parseToolName";
  * Convert provider-agnostic AngiToolDefinition[] to Anthropic.Tool[].
  * The format is identical — Anthropic uses `input_schema` with JSON Schema.
  */
-function toAnthropicTools(tools: AngiToolDefinition[]): Anthropic.Tool[] {
+function toAnthropicTools(tools: AngiToolDefinition[]) {
   return tools.map((t) => ({
     name: t.name,
     description: t.description,
@@ -24,7 +23,8 @@ function toAnthropicTools(tools: AngiToolDefinition[]): Anthropic.Tool[] {
 }
 
 export function createAnthropicServerAdapter(
-  client: Anthropic,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  client: any,
   model?: string
 ): AngiServerAdapter {
   return {

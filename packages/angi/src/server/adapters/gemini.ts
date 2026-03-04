@@ -1,9 +1,3 @@
-import type {
-  GoogleGenAI,
-  FunctionDeclaration,
-  GenerateContentResponse,
-  Type,
-} from "@google/genai";
 import type { AngiServerAdapter } from "../types";
 import type {
   ComponentPayload,
@@ -13,32 +7,28 @@ import type {
 import { parseToolName } from "../core/parseToolName";
 
 /**
- * Map Angi's simple type strings to Google GenAI Type enum values.
+ * Map Angi's simple type strings to Google GenAI Type enum string values.
  */
-function mapSchemaType(type: string): Type {
+function mapSchemaType(type: string): string {
   switch (type) {
     case "number":
-      return "NUMBER" as Type;
+      return "NUMBER";
     case "boolean":
-      return "BOOLEAN" as Type;
+      return "BOOLEAN";
     case "integer":
-      return "INTEGER" as Type;
+      return "INTEGER";
     default:
-      return "STRING" as Type;
+      return "STRING";
   }
 }
 
 /**
  * Convert provider-agnostic AngiToolDefinition[] to Gemini FunctionDeclaration[].
  */
-function toGeminiFunctionDeclarations(
-  tools: AngiToolDefinition[]
-): FunctionDeclaration[] {
+function toGeminiFunctionDeclarations(tools: AngiToolDefinition[]) {
   return tools.map((t) => {
-    const properties: Record<
-      string,
-      { type: Type; description: string }
-    > = {};
+    const properties: Record<string, { type: string; description: string }> =
+      {};
 
     for (const [key, prop] of Object.entries(t.input_schema.properties)) {
       properties[key] = {
@@ -51,7 +41,7 @@ function toGeminiFunctionDeclarations(
       name: t.name,
       description: t.description,
       parameters: {
-        type: "OBJECT" as Type,
+        type: "OBJECT",
         properties,
         required: t.input_schema.required,
       },
@@ -60,7 +50,8 @@ function toGeminiFunctionDeclarations(
 }
 
 export function createGeminiServerAdapter(
-  client: GoogleGenAI,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  client: any,
   model?: string
 ): AngiServerAdapter {
   return {
@@ -91,7 +82,7 @@ export function createGeminiServerAdapter(
       });
 
       for await (const chunk of response) {
-        const candidates = (chunk as GenerateContentResponse).candidates;
+        const candidates = chunk?.candidates;
         if (!candidates || candidates.length === 0) continue;
 
         const parts = candidates[0].content?.parts;

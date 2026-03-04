@@ -20,7 +20,9 @@ async function createAdapterForProvider(
 ): Promise<AngiServerAdapter> {
   switch (provider) {
     case "anthropic": {
-      const Anthropic = (await import("@anthropic-ai/sdk")).default;
+      const Anthropic = (
+        await import(/* webpackIgnore: true */ "@anthropic-ai/sdk")
+      ).default;
       const { createAnthropicServerAdapter } = await import(
         "./adapters/anthropic"
       );
@@ -29,7 +31,11 @@ async function createAdapterForProvider(
     }
 
     case "openai": {
-      const OpenAI = (await import("openai")).default;
+      // Variable + webpackIgnore: bypasses both TypeScript and bundler resolution
+      const openaiPkg = "openai";
+      const OpenAI = (
+        await import(/* webpackIgnore: true */ openaiPkg)
+      ).default;
       const { createOpenAIServerAdapter } = await import(
         "./adapters/openai"
       );
@@ -38,7 +44,11 @@ async function createAdapterForProvider(
     }
 
     case "gemini": {
-      const { GoogleGenAI } = await import("@google/genai");
+      // Variable + webpackIgnore: bypasses both TypeScript and bundler resolution
+      const geminiPkg = "@google/genai";
+      const { GoogleGenAI } = await import(
+        /* webpackIgnore: true */ geminiPkg
+      );
       const { createGeminiServerAdapter } = await import(
         "./adapters/gemini"
       );

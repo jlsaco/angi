@@ -1,4 +1,3 @@
-import type OpenAI from "openai";
 import type { AngiServerAdapter } from "../types";
 import type {
   ComponentPayload,
@@ -10,9 +9,7 @@ import { parseToolName, parseToolParams } from "../core/parseToolName";
 /**
  * Convert provider-agnostic AngiToolDefinition[] to OpenAI function-calling format.
  */
-function toOpenAITools(
-  tools: AngiToolDefinition[]
-): OpenAI.Chat.Completions.ChatCompletionTool[] {
+function toOpenAITools(tools: AngiToolDefinition[]) {
   return tools.map((t) => ({
     type: "function" as const,
     function: {
@@ -28,7 +25,8 @@ function toOpenAITools(
 }
 
 export function createOpenAIServerAdapter(
-  client: OpenAI,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  client: any,
   model?: string
 ): AngiServerAdapter {
   return {
