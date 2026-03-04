@@ -1,20 +1,46 @@
-import type Anthropic from "@anthropic-ai/sdk";
 import type { AngiServerAdapter } from "../types";
-import type { ComponentPayload, AngiStreamChunk } from "../../shared/types";
+import type {
+  ComponentPayload,
+  AngiStreamChunk,
+  AngiToolDefinition,
+} from "../../shared/types";
+import { parseToolName, parseToolParams } from "../core/parseToolName";
 
-export function createAnthropicServerAdapter(client: Anthropic): AngiServerAdapter {
+/**
+ * Convert provider-agnostic AngiToolDefinition[] to Anthropic.Tool[].
+ * The format is identical — Anthropic uses `input_schema` with JSON Schema.
+ */
+function toAnthropicTools(tools: AngiToolDefinition[]) {
+  return tools.map((t) => ({
+    name: t.name,
+    description: t.description,
+    input_schema: {
+      type: t.input_schema.type,
+      properties: t.input_schema.properties,
+      required: t.input_schema.required,
+    },
+  }));
+}
+
+export function createAnthropicServerAdapter(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  client: any,
+  model?: string
+): AngiServerAdapter {
   return {
     async *run(
       prompt: string,
-      components: ComponentPayload[],
-      tools: Anthropic.Tool[],
+      _components: ComponentPayload[],
+      tools: AngiToolDefinition[],
       systemPrompt: string
     ): AsyncIterable<AngiStreamChunk> {
+      const anthropicTools = toAnthropicTools(tools);
+
       const stream = await client.messages.stream({
-        model: "claude-haiku-4-5-20251001",
+        model: model ?? "claude-haiku-4-5-20251001",
         max_tokens: 1024,
         system: systemPrompt,
-        tools: tools.length > 0 ? tools : undefined,
+        tools: anthropicTools.length > 0 ? anthropicTools : undefined,
         messages: [{ role: "user", content: prompt }],
       });
 
@@ -23,7 +49,11 @@ export function createAnthropicServerAdapter(client: Anthropic): AngiServerAdapt
         name: string;
         inputJson: string;
       }> = [];
-      let currentTool: { id: string; name: string; inputJson: string } | null = null;
+      let currentTool: {
+        id: string;
+        name: string;
+        inputJson: string;
+      } | null = null;
 
       for await (const event of stream) {
         if (event.type === "content_block_start") {
@@ -39,7 +69,10 @@ export function createAnthropicServerAdapter(client: Anthropic): AngiServerAdapt
         } else if (event.type === "content_block_delta") {
           if (event.delta.type === "text_delta") {
             yield { type: "text", text: event.delta.text };
-          } else if (event.delta.type === "input_json_delta" && currentTool) {
+          } else if (
+            event.delta.type === "input_json_delta" &&
+            currentTool
+          ) {
             currentTool.inputJson += event.delta.partial_json;
           }
         } else if (event.type === "content_block_stop") {
@@ -50,15 +83,8 @@ export function createAnthropicServerAdapter(client: Anthropic): AngiServerAdapt
         } else if (event.type === "message_stop") {
           // Fire all collected tool uses
           for (const tool of pendingToolUses) {
-            const [componentId, ...actionParts] = tool.name.split("__");
-            const actionName = actionParts.join("__");
-            let params: Record<string, unknown> = {};
-
-            try {
-              params = JSON.parse(tool.inputJson || "{}");
-            } catch {
-              // ignore parse errors
-            }
+            const { componentId, actionName } = parseToolName(tool.name);
+            const params = parseToolParams(tool.inputJson);
 
             yield {
               type: "action",

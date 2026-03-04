@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AngiNextProvider } from "@angi-ai/angi/client";
+import { AngiNextProvider, AngiChatBubble } from "@angi-ai/angi/client";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +25,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <AngiNextProvider>
           {children}
+          <AngiChatBubble />
         </AngiNextProvider>
       </body>
     </html>

@@ -31,6 +31,20 @@ export interface ComponentPayload {
 }
 
 /**
+ * Provider-agnostic tool definition produced by buildTools().
+ * Each adapter converts this to its provider's native format internally.
+ */
+export interface AngiToolDefinition {
+  name: string;
+  description: string;
+  input_schema: {
+    type: "object";
+    properties: Record<string, { type: string; description: string }>;
+    required: string[];
+  };
+}
+
+/**
  * Expected request body for the AI endpoint.
  */
 export interface AngiRequestBody {

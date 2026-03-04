@@ -1,8 +1,7 @@
 "use client";
 
 import ContactForm from "@/components/ContactForm";
-import { AngiChatBubble, Angi } from "@angi-ai/angi/client";
-
+import { Angi } from "@angi-ai/angi/client";
 
 export default function Home() {
   return (
@@ -29,22 +28,15 @@ export default function Home() {
           </p>
         </div>
 
-        {/*
-          <Angi.Form> is a thin boundary — it only provides id + permissions in context.
-          ContactForm registers itself via useAngiComponent() internally.
-        */}
         <Angi id="contact-form-1" permissions={["read", "write"]}>
           <ContactForm />
         </Angi>
+
         <footer className="mt-20 text-gray-600 text-sm">
           Built with Next.js · Powered by{" "}
           <span className="text-primary font-medium">Angi</span>
         </footer>
       </div>
-
-      {/* Floating AI Chat Bubble */}
-      <AngiChatBubble />
     </main>
-
   );
 }
