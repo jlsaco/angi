@@ -5,13 +5,11 @@ import type {
 } from "../types";
 
 /**
- * createAnthropicAdapter — the Anthropic implementation of AngiAdapter.
- *
- * Calls your app's /api/angi server route (which holds the Anthropic SDK
- * and the API key server-side). Returns an async iterable of AngiStreamChunks.
+ * Generic HTTP/SSE adapter for connecting to any Angi server endpoint.
+ * Works with all providers — the server handles provider selection.
  *
  * Usage:
- *   const adapter = createAnthropicAdapter()
+ *   const adapter = createAngiAdapter()
  *   <AngiProvider adapter={adapter}>...</AngiProvider>
  */
 export function createAnthropicAdapter(
@@ -80,3 +78,9 @@ export function createAnthropicAdapter(
     },
   };
 }
+
+/**
+ * Alias for createAnthropicAdapter.
+ * Preferred name since the adapter is provider-agnostic (just HTTP/SSE).
+ */
+export const createAngiAdapter = createAnthropicAdapter;

@@ -1,7 +1,7 @@
 "use client";
 
 import { AngiProvider } from "../components/AngiProvider";
-import { createAnthropicAdapter } from "../adapters/anthropic";
+import { createAngiAdapter } from "../adapters/anthropic";
 import { useMemo } from "react";
 
 /**
@@ -9,10 +9,16 @@ import { useMemo } from "react";
  * Wraps AngiProvider with a client boundary and instantiates the adapter.
  *
  * Usage in layout.tsx:
- *   import { AngiNextProvider } from "@/angi"
+ *   import { AngiNextProvider } from "@angi-ai/angi/client"
  *   <AngiNextProvider>{children}</AngiNextProvider>
  */
-export function AngiNextProvider({ children }: { children: React.ReactNode }) {
-  const adapter = useMemo(() => createAnthropicAdapter(), []);
+export function AngiNextProvider({
+  endpoint,
+  children,
+}: {
+  endpoint?: string;
+  children: React.ReactNode;
+}) {
+  const adapter = useMemo(() => createAngiAdapter(endpoint), [endpoint]);
   return <AngiProvider adapter={adapter}>{children}</AngiProvider>;
 }

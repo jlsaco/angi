@@ -10,6 +10,7 @@ import type {
   AngiStreamChunk,
   AngiToolDefinition,
 } from "../../shared/types";
+import { parseToolName } from "../core/parseToolName";
 
 /**
  * Map Angi's simple type strings to Google GenAI Type enum values.
@@ -107,8 +108,7 @@ export function createGeminiServerAdapter(
             const { name, args } = part.functionCall;
             if (!name) continue;
 
-            const [componentId, ...actionParts] = name.split("__");
-            const actionName = actionParts.join("__");
+            const { componentId, actionName } = parseToolName(name);
 
             yield {
               type: "action",

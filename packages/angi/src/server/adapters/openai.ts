@@ -5,6 +5,7 @@ import type {
   AngiStreamChunk,
   AngiToolDefinition,
 } from "../../shared/types";
+import { parseToolName, parseToolParams } from "../core/parseToolName";
 
 /**
  * Convert provider-agnostic AngiToolDefinition[] to OpenAI function-calling format.
@@ -100,15 +101,8 @@ export function createOpenAIServerAdapter(
           for (const [, acc] of toolCallAccumulators) {
             if (!acc.name) continue;
 
-            const [componentId, ...actionParts] = acc.name.split("__");
-            const actionName = actionParts.join("__");
-            let params: Record<string, unknown> = {};
-
-            try {
-              params = JSON.parse(acc.argumentsJson || "{}");
-            } catch {
-              // ignore parse errors
-            }
+            const { componentId, actionName } = parseToolName(acc.name);
+            const params = parseToolParams(acc.argumentsJson);
 
             yield {
               type: "action",

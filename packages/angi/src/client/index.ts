@@ -5,7 +5,7 @@ export { AngiChatBubble } from "./components/AngiChatBubble";
 export { Angi } from "./components/Angi";
 export { useAngi } from "./hooks/useAngi";
 export { useAngiComponent } from "./hooks/useAngiComponent";
-export { createAnthropicAdapter } from "./adapters/anthropic";
+export { createAnthropicAdapter, createAngiAdapter } from "./adapters/anthropic";
 
 export type {
   AngiAction,

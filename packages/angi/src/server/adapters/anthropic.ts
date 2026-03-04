@@ -5,6 +5,7 @@ import type {
   AngiStreamChunk,
   AngiToolDefinition,
 } from "../../shared/types";
+import { parseToolName, parseToolParams } from "../core/parseToolName";
 
 /**
  * Convert provider-agnostic AngiToolDefinition[] to Anthropic.Tool[].
@@ -82,15 +83,8 @@ export function createAnthropicServerAdapter(
         } else if (event.type === "message_stop") {
           // Fire all collected tool uses
           for (const tool of pendingToolUses) {
-            const [componentId, ...actionParts] = tool.name.split("__");
-            const actionName = actionParts.join("__");
-            let params: Record<string, unknown> = {};
-
-            try {
-              params = JSON.parse(tool.inputJson || "{}");
-            } catch {
-              // ignore parse errors
-            }
+            const { componentId, actionName } = parseToolName(tool.name);
+            const params = parseToolParams(tool.inputJson);
 
             yield {
               type: "action",
